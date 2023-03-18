@@ -11,7 +11,7 @@
         }
 
         public function read() {
-            $query = 'SELECT id, author FROM ' . $this->tablea . ''
+            $query = 'SELECT id, author FROM ' . $this->tablea . '';
 
             $stmt = $this->conn->prepare($query);
 

@@ -11,7 +11,7 @@
         }
 
         public function read() {
-            $query = 'SELECT id, category FROM ' . $this->tablec . ''
+            $query = 'SELECT id, category FROM ' . $this->tablec . '';
 
             $stmt = $this->conn->prepare($query);
 
