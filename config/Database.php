@@ -7,24 +7,17 @@
         private $username;
         private $password;
 
-        public function _construct() {
+        public function connect() {
             $this->username = getenv('USERNAME');
             $this->password = getenv('PASSWORD');
             $this->dbname = getenv('DBNAME');
             $this->host = getenv('HOST');
             $this->port = getenv('PORT');
-        }
-
-        public function connect() {
-            // instead of $this->conn
             if ($this->conn) {
-                //connection already exists, return it
-                return $this->conn;
+                return $this->conn;     //connection already exists, return it
             } else {
-
-                $dsn = "pgsql:host={$this->host};port={$this->port};dbname={$this->dbname};";
-
                 try {
+                    $dsn = "pgsql:host='$this->host';port='$this->port';dbname='$this->dbname'";
                     $this->conn = new PDO($dsn, $this->username, $this->password);
                     $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     return $this->conn;

@@ -8,7 +8,7 @@
     $database = new Database();
     $db = $database->connect();
 
-    $quotes = new quotes($db);
+    $quotes = new Quote($db);
 
     $result = $quotes->read();
 
