@@ -8,7 +8,7 @@
     $database = new Database();
     $db = $database->connect();
 
-    $categories = new Category($db);
+    $categories = new Category($db); //
 
     $result = $categories->read();
 
