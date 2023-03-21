@@ -5,23 +5,21 @@
     header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
     include_once '../../config/Database.php';
-    include_once '../../models/quotes.php';
+    include_once '../../models/Author.php';
 
     $database = new Database();
     $db = $database->connect();
 
-    $quotes = new Quote($db);
+    $authors = new Author($db);
 
     $data = json_decode(file_get_contents("php://input"));
 
-    $quotes->id = $data->id;
-    $quotes->quote = $data->quote;
-    $quotes->author = $data->author_id;
-    $quotes->category = $data->category_id;
+    $authors->id = $data->id;
+    $authors->author = $data->author;
 
-    if($quotes->create()) {
-        echo json_encode(array('message' => 'Quote updated'));
+    if($authors->create()) {
+        echo json_encode(array('message' => 'Author updated'));
     }
     else {
-        echo json_encode(array('message' => 'Quote not updated'));
+        echo json_encode(array('message' => 'Author not updated'));
     }

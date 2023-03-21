@@ -33,7 +33,7 @@
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $this->author = $row['category'];
+            $this->author = $row['author'];
 
             return $stmt;
         }

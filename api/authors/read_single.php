@@ -3,22 +3,20 @@
     header('Content-Type: application/json');
 
     include_once '../../config/Database.php';
-    include_once '../../models/quotes.php';
+    include_once '../../models/Author.php';
 
     $database = new Database();
     $db = $database->connect();
 
-    $quotes = new Quote($db);
+    $authors = new Author($db);
 
-    $quotes->id = isset($_GET['id']) ? $_GET['id'] : die();
+    $authors->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-    $quotes->read_single();
+    $authors->read_single();
 
-    $quotes_arr = array(
-        'id' => $quotes->$id,
-        'quote' => $quotes->$quote,
-        'author' => $quotes->$author,
-        'category' => $quotes->$category
+    $authors_arr = array(
+        'id' => $authors->$id,
+        'author' => $authors->$author
     );
 
-    print_r(json_encode($quotes_arr));
+    print_r(json_encode($authors_arr));

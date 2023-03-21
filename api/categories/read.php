@@ -3,35 +3,33 @@
     header('Content-Type: application/json');
 
     include_once '../../config/Database.php';
-    include_once '../../models/quotes.php';
+    include_once '../../models/Category.php';
 
     $database = new Database();
     $db = $database->connect();
 
-    $quotes = new Quote($db);
+    $categories = new Category($db);
 
-    $result = $quotes->read();
+    $result = $categories->read();
 
     $num = $result->rowCount();
 
     if($num > 0) {
-        $quotes_arr = array();
+        $categories_arr = array();
 
         while($row = $result->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
 
-            $quote_item = array(
+            $category_item = array(
                 'id' => $id,
-                'quote' => $quote,
-                'author' => $author,
                 'category' => $category
             );
 
-            array_push($quotes_arr, $quote_item);
+            array_push($categories_arr, $category_item);
         }
 
-        echo json_encode($quotes_arr);
+        echo json_encode($categories_arr);
     }
     else {
-        echo json_encode(array('message' => 'No quotes found.'));
+        echo json_encode(array('message' => 'No categories found.'));
     }
