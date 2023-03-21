@@ -22,8 +22,7 @@
 
         public function read_single() {
             $query = 'SELECT id, author FROM ' . $this->tablea . '
-                WHERE id = ?
-                LIMIT 0,1';
+                WHERE id = ?';
 
             $stmt = $this->conn->prepare($query);
 

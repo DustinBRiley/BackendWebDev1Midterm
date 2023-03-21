@@ -22,8 +22,7 @@
 
         public function read_single() {
             $query = 'SELECT id, category FROM ' . $this->tablec . '
-                WHERE id = ?
-                LIMIT 0,1';
+                WHERE id = ?';
 
             $stmt = $this->conn->prepare($query);
 

@@ -32,8 +32,7 @@
                 (SELECT author FROM ' . $this->tablea . ' a WHERE q.author_id = a.id) as author,
                 (SELECT category FROM ' . $this->tablec . ' c WHERE q.category_id = c.id) as category
                 FROM ' . $this->tableq . ' q, ' . $this->tablea . ' a, ' . $this->tablec . ' c
-                WHERE id = ?
-                LIMIT 0,1';
+                WHERE id = ?';
 
             $stmt = $this->conn->prepare($query);
 
