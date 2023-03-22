@@ -12,14 +12,14 @@
 
     $categories = new Category($db);
 
-    $data = json_decode(file_get_contents("php://input"));
+    $categories->id = isset($_GET['id']) ? $_GET['id'] : null;
+    $categories->category = isset($_GET['category']) ? $_GET['category'] : null;
 
-    $categories->id = $data->id;
-    $categories->category = $data->category_id;
-
-    if($categories->create()) {
-        echo json_encode(array('message' => 'Category updated'));
+    if($categories->category == null) {
+        echo json_encode(array('message' => 'Missing Required Parameters'));
+        exit();
     }
-    else {
-        echo json_encode(array('message' => 'Category not updated'));
+
+    if($categories->update()) {
+        echo json_encode(array('message' => "updated category ($categories->id, $categories->category)"));
     }

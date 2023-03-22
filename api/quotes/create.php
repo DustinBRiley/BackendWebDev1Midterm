@@ -12,15 +12,15 @@
 
     $quotes = new Quote($db);
 
-    $data = json_decode(file_get_contents("php://input"));
+    $quotes->quote = isset($_GET['quote']) ? $_GET['quote'] : null;
+    $quotes->author = isset($_GET['author_id']) ? $_GET['author_id'] : null;
+    $quotes->category = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
-    $quotes->quote = $data->quote;
-    $quotes->author = $data->author_id;
-    $quotes->category = $data->category_id;
+    if($quotes->quote == null || $quotes->author == null || $quotes->category == null) {
+        echo json_encode(array('message' => 'Missing Required Parameters'));
+        exit();
+    }
 
     if($quotes->create()) {
-        echo json_encode(array('message' => 'Quote created'));
-    }
-    else {
-        echo json_encode(array('message' => 'Quote not created'));
+        echo json_encode(array('message' => "created quote ($quotes->id, $quotes->quote, $quotes->author, $quotes->category)"));
     }

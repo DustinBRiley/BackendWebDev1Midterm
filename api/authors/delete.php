@@ -12,13 +12,8 @@
 
     $authors = new Author($db);
 
-    $data = json_decode(file_get_contents("php://input"));
-
-    $authors->id = $data->id;
+    $authors->id = isset($_GET['id']) ? $_GET['id'] : null;
 
     if($authors->delete()) {
-        echo json_encode(array('message' => 'Author deleted'));
-    }
-    else {
-        echo json_encode(array('message' => 'Author not deleted'));
+        echo json_encode(array('message' => "$authors->id deleted"));
     }

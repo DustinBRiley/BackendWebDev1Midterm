@@ -20,6 +20,11 @@
             exit();
             break;
         default:
-            include_once '../../api/categories/read_single.php';
+            if(isset($_GET['id'])) {
+              include_once '../../api/categories/read_single.php';
+            }
+            else {
+              include_once '../../api/categories/read.php';
+            }
             break;
     }

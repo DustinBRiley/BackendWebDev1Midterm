@@ -10,15 +10,32 @@
 
     $quotes = new Quote($db);
 
-    $quotes->id = isset($_GET['id']) ? $_GET['id'] : die();
+    $quotes->id = isset($_GET['id']) ? $_GET['id'] : null;
+    $quotes->author = isset($_GET['author_id']) ? $_GET['author_id'] : null;
+    $quotes->category = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
-    $quotes->read_single();
+    $result = $quotes->read_single();
 
-    $quotes_arr = array(
-        'id' => $quotes->$id,
-        'quote' => $quotes->$quote,
-        'author' => $quotes->$author,
-        'category' => $quotes->$category
-    );
+    $num = $result->rowCount();
 
-    print_r(json_encode($quotes_arr));
+    if($num > 0) {
+        $quotes_arr = array();
+
+        while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            extract($row);
+
+            $quote_item = array(
+                'id' => $id,
+                'quote' => $quote,
+                'author' => $author,
+                'category' => $category
+            );
+
+            array_push($quotes_arr, $quote_item);
+        }
+        
+        echo json_encode($quotes_arr);
+    }
+    else {
+        echo json_encode(array('message' => 'No Quotes Found'));
+    }

@@ -12,11 +12,15 @@
 
     $categories->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-    $categories->read_single();
+    $result = $categories->read_single();
 
-    $categories_arr = array(
-        'id' => $categories->$id,
-        'category' => $categories->$category
-    );
+    $num = $result->rowCount();
 
-    print_r(json_encode($categories_arr));
+    if($num > 0) {
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        
+        echo json_encode($row);
+    }
+    else {
+        echo json_encode(array('message' => 'category_id Not Found'));
+    }

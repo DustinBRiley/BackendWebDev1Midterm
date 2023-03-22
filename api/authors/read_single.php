@@ -10,13 +10,18 @@
 
     $authors = new Author($db);
 
-    $authors->id = isset($_GET['id']) ? $_GET['id'] : die();
+    $authors->id = isset($_GET['id']) ? $_GET['id'] : null;
 
-    $authors->read_single();
+    $result = $authors->read_single();
 
-    $authors_arr = array(
-        'id' => $authors->$id,
-        'author' => $authors->$author
-    );
+    $num = $result->rowCount();
 
-    print_r(json_encode($authors_arr));
+    if($num > 0) {
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        
+        echo json_encode($row);
+    }
+    else {
+        echo json_encode(array('message' => 'author_id Not Found'));
+    }
+

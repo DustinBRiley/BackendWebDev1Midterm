@@ -20,6 +20,11 @@
             exit();
             break;
         default:
-            include_once '../../api/quotes/read_single.php';
+            if(isset($_GET['id']) || isset($_GET['author_id']) || isset($_GET['category_id'])) {
+              include_once '../../api/quotes/read_single.php';
+            }
+            else {
+              include_once '../../api/quotes/read.php';
+            }
             break;
     }

@@ -11,7 +11,7 @@
         }
 
         public function read() {
-            $query = 'SELECT id, category FROM ' . $this->tablec . '';
+            $query = 'SELECT id, category FROM ' . $this->tablec . ' ORDER BY id';
 
             $stmt = $this->conn->prepare($query);
 
@@ -22,76 +22,89 @@
 
         public function read_single() {
             $query = 'SELECT id, category FROM ' . $this->tablec . '
-                WHERE id = ?';
+                WHERE id = ' . $this->id . '';
 
             $stmt = $this->conn->prepare($query);
 
-            $stmt->bindParam(1, $this->id);
-
             $stmt->execute();
-
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            $this->category = $row['category'];
 
             return $stmt;
         }
 
         public function create() {
-            $query = 'INSERT INTO ' . $this->tablec . '
-                SET category = :category';
+            $query = "INSERT INTO $this->tablec(category)
+                VALUES ('$this->category')";
 
             $stmt = $this->conn->prepare($query);
 
             $this->category = htmlspecialchars(strip_tags($this->category));
 
-            $stmt->bindParam(':category', $this->category);
-
             if($stmt->execute()) {
+                $query = "SELECT id FROM $this->tablec 
+                    WHERE category = '$this->category'";
+
+                $stmt = $this->conn->prepare($query);
+
+                $stmt->execute();
+
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                $this->id = $row['id'];
+              
                 return true;
             }
-
-            printf("Error: %s.\n", $stmt->error);
 
             return false;
         }
 
         public function update() {
-            $query = 'UPDATE ' . $this->tablec . '
-                SET category = :category
-                WHERE id = :id';
-
-            $stmt = $this->conn->prepare($query);
-
             $this->id = htmlspecialchars(strip_tags($this->id));
             $this->category = htmlspecialchars(strip_tags($this->category));
 
-            $stmt->bindParam(':id', $this->id);
-            $stmt->bindParam(':category', $this->category);
+            $query = "SELECT category FROM $this->tablec 
+                WHERE id = $this->id";
+        
+            $stmt = $this->conn->prepare($query);
+        
+            $stmt->execute();
+
+            $num = $stmt->rowCount();
+        
+            if($num == 0) {
+                echo json_encode(array('message' => 'No Categories Found'));
+                return false;
+            }
+          
+            $query = "UPDATE $this->tablec
+                SET category = '$this->category'
+                WHERE id = $this->id";
+
+            $stmt = $this->conn->prepare($query);
 
             if($stmt->execute()) {
                 return true;
             }
-
-            printf("Error: %s.\n", $stmt->error);
 
             return false;
         }
 
         public function delete() {
-            $query = 'DELETE FROM ' . $this->tablec . ' WHERE id = :id';
+            $this->id = htmlspecialchars(strip_tags($this->id));
+          
+            $query = "DELETE FROM $this->tablec WHERE id = $this->id";
 
             $stmt = $this->conn->prepare($query);
-
-            $this->id = htmlspecialchars(strip_tags($this->id));
-
-            $stmt->bindParam(':id', $this->id);
-
+          
             if($stmt->execute()) {
+                $num = $stmt->rowCount();
+        
+                if($num == 0) {
+                    echo json_encode(array('message' => 'No Categories Found'));
+                    return false;
+                }
+              
                 return true;
             }
-
-            printf("Error: %s.\n", $stmt->error);
 
             return false;
         }

@@ -12,13 +12,8 @@
 
     $categories = new Category($db);
 
-    $data = json_decode(file_get_contents("php://input"));
-
-    $categories->id = $data->id;
+    $categories->id = isset($_GET['id']) ? $_GET['id'] : null;
 
     if($categories->delete()) {
-        echo json_encode(array('message' => 'Category deleted'));
-    }
-    else {
-        echo json_encode(array('message' => 'Category not deleted'));
+        echo json_encode(array('message' => "$categories->id deleted"));
     }
