@@ -12,13 +12,15 @@
 
     $authors = new Author($db);
 
-    $authors->author = isset($_GET['author']) ? $_GET['author'] : null;
+    $data = json_decode(file_get_contents("php://input"));
 
-    if($authors->author == null) {
+    if(!isset($data->author)) {
         echo json_encode(array('message' => 'Missing Required Parameters'));
         exit();
     }
 
+    $authors->author = $data->author;
+
     if($authors->create()) {
-        echo json_encode(array('message' => "created author ($authors->id, $authors->author)"));
+        echo json_encode(array('id' => $authors->id, 'author' => $authors->author));
     }

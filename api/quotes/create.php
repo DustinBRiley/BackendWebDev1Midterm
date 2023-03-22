@@ -12,15 +12,26 @@
 
     $quotes = new Quote($db);
 
-    $quotes->quote = isset($_GET['quote']) ? $_GET['quote'] : null;
-    $quotes->author = isset($_GET['author_id']) ? $_GET['author_id'] : null;
-    $quotes->category = isset($_GET['category_id']) ? $_GET['category_id'] : null;
+    $data = json_decode(file_get_contents("php://input"));
 
-    if($quotes->quote == null || $quotes->author == null || $quotes->category == null) {
+    if(!isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) {
         echo json_encode(array('message' => 'Missing Required Parameters'));
         exit();
     }
 
+    $quotes->quote = $data->quote;
+    $quotes->author = $data->author_id;
+    $quotes->category = $data->category_id;
+
     if($quotes->create()) {
-        echo json_encode(array('message' => "created quote ($quotes->id, $quotes->quote, $quotes->author, $quotes->category)"));
+        echo json_encode(array('id' => $quotes->id, 'quote' => $quotes->quote, 'author_id' => $quotes->author, 'category_id' => $quotes->category));
+    } else {
+        if($quotes->author == null) {
+            echo json_encode(array('message' => 'author_id Not Found'));
+            exit();
+        }
+        if($quotes->category == null) {
+            echo json_encode(array('message' => 'category_id Not Found'));
+            exit();
+        }
     }

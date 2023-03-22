@@ -19,6 +19,12 @@
     $num = $result->rowCount();
 
     if($num > 0) {
+        if($quotes->id != null) {
+          $row = $result->fetch(PDO::FETCH_ASSOC);
+          
+          echo json_encode($row);
+          exit();
+        }
         $quotes_arr = array();
 
         while($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -33,7 +39,7 @@
 
             array_push($quotes_arr, $quote_item);
         }
-        
+
         echo json_encode($quotes_arr);
     }
     else {

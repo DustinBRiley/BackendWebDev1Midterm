@@ -12,16 +12,18 @@
 
     $quotes = new Quote($db);
 
-    $quotes->id = isset($_GET['id']) ? $_GET['id'] : null;
-    $quotes->quote = isset($_GET['quote']) ? $_GET['quote'] : null;
-    $quotes->author = isset($_GET['author_id']) ? $_GET['author_id'] : null;
-    $quotes->category = isset($_GET['category_id']) ? $_GET['category_id'] : null;
+    $data = json_decode(file_get_contents("php://input"));
 
-    if($quotes->quote == null || $quotes->author == null || $quotes->category == null) {
+    if(!isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) {
         echo json_encode(array('message' => 'Missing Required Parameters'));
         exit();
     }
 
+    $quotes->id = $data->id;
+    $quotes->quote = $data->quote;
+    $quotes->author = $data->author_id;
+    $quotes->category = $data->category_id;
+
     if($quotes->update()) {
-        echo json_encode(array('message' => "updated quote ($quotes->id, $quotes->quote, $quotes->author, $quotes->category)"));
+        echo json_encode(array('id' => $quotes->id, 'quote' => $quotes->quote, 'author_id' => $quotes->author, 'category_id' => $quotes->category));
     }

@@ -12,14 +12,16 @@
 
     $authors = new Author($db);
 
-    $authors->id = isset($_GET['id']) ? $_GET['id'] : null;
-    $authors->author = isset($_GET['author']) ? $_GET['author'] : null;
+    $data = json_decode(file_get_contents("php://input"));
 
-    if($authors->author == null) {
+    if(!isset($data->author) || !isset($data->id)) {
         echo json_encode(array('message' => 'Missing Required Parameters'));
         exit();
     }
 
+    $authors->id = $data->id;
+    $authors->author = $data->author;
+
     if($authors->update()) {
-        echo json_encode(array('message' => "updated author ($authors->id, $authors->author)"));
+        echo json_encode(array('id' => $authors->id, 'author' => $authors->author));
     }

@@ -12,13 +12,15 @@
 
     $categories = new Category($db);
 
-    $categories->category = isset($_GET['category']) ? $_GET['category'] : null;
+    $data = json_decode(file_get_contents("php://input"));
 
-    if($categories->category == null) {
+    if(!isset($data->category)) {
         echo json_encode(array('message' => 'Missing Required Parameters'));
         exit();
     }
 
+    $categories->category = $data->category;
+      
     if($categories->create()) {
-        echo json_encode(array('message' => "created category ($categories->id, $categories->category)"));
+        echo json_encode(array('id' => $categories->id, 'category' => $categories->category));
     }

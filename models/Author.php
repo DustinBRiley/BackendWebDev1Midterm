@@ -32,31 +32,27 @@
         }
 
         public function create() {
+            $this->author = htmlspecialchars(strip_tags($this->author)); 
+          
             $query = "INSERT INTO $this->tablea(author)
                 VALUES ('$this->author')";
 
+            $stmt = $this->conn->prepare($query);         
+
+            $stmt->execute();
+          
+            $query = "SELECT id FROM $this->tablea 
+                WHERE author = '$this->author'";
+
             $stmt = $this->conn->prepare($query);
 
-            $this->author = htmlspecialchars(strip_tags($this->author));          
+            $stmt->execute();
 
-            if($stmt->execute()) {
-                $query = "SELECT id FROM $this->tablea 
-                    WHERE author = '$this->author'";
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $stmt = $this->conn->prepare($query);
-
-                $stmt->execute();
-
-                $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                $this->id = $row['id'];
-              
-                return true;
-            }
-
-            printf("Error: %s.\n", $stmt->error);
-
-            return false;
+            $this->id = $row['id'];
+          
+            return true;
         }
 
         public function update() {
@@ -83,31 +79,26 @@
 
             $stmt = $this->conn->prepare($query);
 
-            if($stmt->execute()) {
-                return true;
-            }
-
-            return false;
+            $stmt->execute();
+          
+            return true;
         }
 
         public function delete() {
             $this->id = htmlspecialchars(strip_tags($this->id));
-          
+                     
             $query = "DELETE FROM $this->tablea WHERE id = $this->id";
 
             $stmt = $this->conn->prepare($query);
           
-            if($stmt->execute()) {
-                $num = $stmt->rowCount();
-        
-                if($num == 0) {
-                    echo json_encode(array('message' => 'No Authors Found'));
-                    return false;
-                }
-              
-                return true;
+            $stmt->execute();
+            
+            $num = $stmt->rowCount();
+                
+            if($num > 0) {
+                return true; 
             }
-
+                
             return false;
         }
     }

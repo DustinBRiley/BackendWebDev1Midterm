@@ -12,8 +12,13 @@
 
     $quotes = new Quote($db);
 
-    $quotes->id = isset($_GET['id']) ? $_GET['id'] : null;
+    $data = json_decode(file_get_contents("php://input"));
+
+    $quotes->id = $data->id;
 
     if($quotes->delete()) {
-        echo json_encode(array('message' => "$quotes->id deleted"));
+        echo json_encode(array('id' => $quotes->id));
+    }
+    else {
+        echo json_encode(array('message' => 'No Quotes Found'));
     }

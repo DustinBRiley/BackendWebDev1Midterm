@@ -67,6 +67,7 @@
         public function create() {
             $this->author = htmlspecialchars(strip_tags($this->author));
             $this->category = htmlspecialchars(strip_tags($this->category));
+            $this->quote = htmlspecialchars(strip_tags($this->quote));
             
             $query = "SELECT id FROM $this->tablea 
                 WHERE id = $this->author";
@@ -78,7 +79,7 @@
             $num = $stmt->rowCount();
         
             if($num == 0) {
-                echo json_encode(array('message' => 'author_id Not Found'));
+                $this->author = null;
                 return false;
             }
         
@@ -92,37 +93,34 @@
             $num = $stmt->rowCount();
         
             if($num == 0) {
-                echo json_encode(array('message' => 'category_id Not Found'));
+                $this->category = null;
                 return false;
             }
-          
+
             $query = "INSERT INTO $this->tableq(quote, author_id, category_id)
                 VALUES ('$this->quote','$this->author','$this->category')";
 
             $stmt = $this->conn->prepare($query);
 
-            $this->quote = htmlspecialchars(strip_tags($this->quote));
+            $stmt->execute();
+            
+            $query = "SELECT id FROM $this->tableq 
+                WHERE quote = '$this->quote' AND author_id = $this->author AND category_id = $this->category";
 
-            if($stmt->execute()) {
-                $query = "SELECT id FROM $this->tableq 
-                    WHERE quote = '$this->quote' AND author_id = $this->author AND category_id = $this->category";
+            $stmt = $this->conn->prepare($query);
 
-                $stmt = $this->conn->prepare($query);
+            $stmt->execute();
 
-                $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->id = $row['id'];
 
-                $this->id = $row['id'];
-                
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
         public function update() {
             $this->id = htmlspecialchars(strip_tags($this->id));
+            $this->quote = htmlspecialchars(strip_tags($this->quote));
             $this->author = htmlspecialchars(strip_tags($this->author));
             $this->category = htmlspecialchars(strip_tags($this->category));
 
@@ -173,8 +171,6 @@
                 WHERE id = $this->id";
 
             $stmt = $this->conn->prepare($query);
-          
-            $this->quote = htmlspecialchars(strip_tags($this->quote));
 
             if($stmt->execute()) {
                 return true;
@@ -185,22 +181,19 @@
 
         public function delete() {
             $this->id = htmlspecialchars(strip_tags($this->id));
-          
+                     
             $query = "DELETE FROM $this->tableq WHERE id = $this->id";
 
             $stmt = $this->conn->prepare($query);
           
-            if($stmt->execute()) {
-                $num = $stmt->rowCount();
-        
-                if($num == 0) {
-                    echo json_encode(array('message' => 'No Quotes Found'));
-                    return false;
-                }
-              
-                return true;
+            $stmt->execute();
+            
+            $num = $stmt->rowCount();
+                
+            if($num > 0) {
+                return true; 
             }
-
+                
             return false;
         }
     }
