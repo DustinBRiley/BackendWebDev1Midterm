@@ -1,5 +1,3 @@
-name: Dustin Riley
-URL: https://backendwebdev1midterm.dustinbriley.repl.co/
 ROUTE	GET
 /quotes/  All quotes are returned
 /quotes/?id=4	The specific quote
@@ -14,3 +12,4 @@ ROUTE	POST	PUT	DELETE
 /quotes/	created quote (id, quote, author_id, category_id)	updated quote (id, quote, author_id, category_id)	id of deleted quote
 /authors/	created author (id, author)	updated author (id, author)	id of deleted author
 /categories/	created category (id, category)	updated category (id, category)	id of deleted category
+API: https://backendwebdev1midterm.dustinbriley.repl.co/
