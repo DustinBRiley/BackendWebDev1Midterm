@@ -1,4 +1,4 @@
-ROUTE	GET
+ROUTE	GET /n
 /quotes/  All quotes are returned
 /quotes/?id=4	The specific quote
 /quotes/?author_id=10	All quotes from author_id=10
